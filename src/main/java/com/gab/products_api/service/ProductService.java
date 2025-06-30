@@ -40,6 +40,33 @@ public class ProductService {
         return productToResponse(product);
     }
 
+    public ProductResponse updateProduct(String id, ProductRequest productRequest) {
+        Optional<Product> productOptional = this.productRepository.findById(UUID.fromString(id));
+
+        if (productOptional.isEmpty()) {
+            throw new NotFoundException("product not found");
+        }
+
+        Product product = productOptional.get();
+
+        if (productRequest.name() != null) {
+            product.setName(productRequest.name());
+        }
+
+        if (productRequest.description() != null) {
+            product.setDescription(productRequest.description());
+        }
+
+        if (productRequest.price() != null) {
+            product.setPrice(productRequest.price());
+        }
+
+        if (productRequest.stock() != null) {
+            product.setStock(productRequest.stock());
+        }
+
+        return productToResponse(this.productRepository.save(product));
+    }
 
     public void deleteProduct(UUID id) {
         this.productRepository.deleteById(id);

@@ -1,6 +1,5 @@
 package com.gab.products_api.controller;
 
-import com.gab.products_api.domain.model.Product;
 import com.gab.products_api.domain.request.ProductRequest;
 import com.gab.products_api.domain.response.ProductResponse;
 import com.gab.products_api.domain.response.Response;
@@ -62,6 +61,20 @@ public class ProductController {
         } catch (NotFoundException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Response<ProductResponse>> updateProduct(@PathVariable String id, @RequestBody ProductRequest productRequest) {
+        try {
+            ProductResponse product = productService.updateProduct(id, productRequest);
+
+            Response<ProductResponse> response = new Response<>(product, "product created");
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
         }
     }
 
